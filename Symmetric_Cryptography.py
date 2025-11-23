@@ -8,7 +8,7 @@ from Crypto.Cipher import AES, DES, DES3, Blowfish, ChaCha20, ARC4, ARC2, Salsa2
 from Crypto.Random import get_random_bytes
 
 
-# ---------------- Algorithm definitions ----------------
+# Algorithm definitions 
 algorithms = {
     "AES-128": (AES, 16),
     "AES-192": (AES, 24),
@@ -25,7 +25,7 @@ algorithms = {
 block_ciphers = {"AES-128", "AES-192", "AES-256", "DES", "3DES", "Blowfish", "RC2"}
 
 
-# ---------------- Utility functions ----------------
+#Utility functions 
 def pad(data, block_size):
     padding_len = block_size - (len(data) % block_size)
     return data + bytes([padding_len] * padding_len)
@@ -39,7 +39,7 @@ def shannon_entropy(data: bytes) -> float:
     return -sum((c / length) * math.log2(c / length) for c in freq.values())
 
 
-# ---------------- Single measurement ----------------
+#  Single measurement 
 def measure_once(name, data, iterations=3):
     proc = psutil.Process()
     mem_before = proc.memory_info().rss / (1024 ** 2)
@@ -54,7 +54,7 @@ def measure_once(name, data, iterations=3):
 
     block_size = CipherClass.block_size if name in block_ciphers else None
 
-    # -------- Encryption time only --------
+    # Encryption time only 
     t0_enc = time.time()
     for _ in range(iterations):
         if name in block_ciphers:
@@ -65,7 +65,7 @@ def measure_once(name, data, iterations=3):
             encrypted = cipher.encrypt(data)
     enc_time = time.time() - t0_enc
 
-    # -------- Decryption time only --------
+    #Decryption time only 
     t0_dec = time.time()
     for _ in range(iterations):
         if name in block_ciphers:
@@ -93,7 +93,7 @@ def measure_once(name, data, iterations=3):
     }
 
 
-# ---------------- Average benchmark ----------------
+# Average benchmark 
 def benchmark_algorithm(name, data, repeat=5):
     runs = [measure_once(name, data) for _ in range(repeat)]
 
@@ -111,7 +111,7 @@ def benchmark_algorithm(name, data, repeat=5):
     }
 
 
-# ---------------- Main ----------------
+#  Main
 def main():
     file_size_mb = 100
     file_bytes = file_size_mb * 1024 * 1024

@@ -6,12 +6,10 @@ from cryptography.hazmat.primitives.asymmetric import ec, rsa
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 
-LOOPS = 50   # số vòng lặp benchmark
+LOOPS = 50   
 
 
-# =============================
 # Benchmark (average over loops)
-# =============================
 def benchmark_avg(name, keygen_fn, sign_fn, verify_fn, get_sizes_fn):
 
     keygen_times = []
@@ -62,9 +60,7 @@ def benchmark_avg(name, keygen_fn, sign_fn, verify_fn, get_sizes_fn):
     ]
 
 
-# =============================
 # Algorithms
-# =============================
 def rsa_bench(bits):
     return benchmark_avg(
         f"RSA-{bits}",
@@ -127,9 +123,7 @@ def ecc_bench(curve, label):
     )
 
 
-# =============================
 # RUN & STORE RESULTS
-# =============================
 results = []
 
 # RSA
@@ -142,9 +136,7 @@ results.append(ecc_bench(ec.SECP256R1(), "P-256"))
 results.append(ecc_bench(ec.SECP384R1(), "P-384"))
 
 
-# =============================
 # PRINT TABLE
-# =============================
 headers = [
     "Algorithm",
     "Loops",
@@ -159,9 +151,7 @@ headers = [
 print("\n" + tabulate(results, headers=headers, tablefmt="grid"))
 
 
-# =============================
 # CONVERT TO NANOSECONDS + EXTRACT DATA
-# =============================
 NS = 1_000_000_000
 
 algos = [r[0] for r in results]
@@ -175,9 +165,7 @@ pub_sizes  = [r[6] for r in results]
 sig_sizes  = [r[7] for r in results]
 
 
-# =============================
 # BAR CHARTS
-# =============================
 def plot_bar(values, title, ylabel):
     plt.figure(figsize=(10, 5))
     plt.bar(algos, values)
